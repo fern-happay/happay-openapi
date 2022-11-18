@@ -1,0 +1,72 @@
+openapi: 3.0.1
+info:
+  title: api
+  version: 0.0.4
+paths:
+  /account/:
+    post:
+      description: >-
+        This API creates an Account for a User. There are two types of account
+        can be created, PREPAID and LIMIT.
+      operationId: AccountService.createAccount
+      tags:
+        - AccountService
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountCreateAccountResponse'
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountCreateAccountRequest'
+components:
+  schemas:
+    AccountCreateAccountRequest:
+      type: object
+      properties:
+        account_type:
+          $ref: '#/components/schemas/AccountAccountTypes'
+        user_id:
+          type: string
+          description: 'eg: usr_5a33fa01ce4b4113a11ceb5c17c601c5'
+      required:
+        - account_type
+        - user_id
+    AccountCreateAccountResponse:
+      type: object
+      properties:
+        account_id:
+          type: string
+          description: |
+            unique reference of this account
+            eg: acc_db7ca20c268045f6bcdb27af064c19c4
+        user_id:
+          type: string
+          description: |
+            unique reference of the user
+            eg: usr_5a33fa01ce4b4113a11ceb5c17c601c5
+      required:
+        - account_id
+        - user_id
+    AccountAccountTypes:
+      type: string
+      enum:
+        - PREPAID
+        - LIMIT
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+servers:
+  - url: https://api.uat-isac.happay.in
+    docs: Base URL for UAT
+  - url: https://api.isac.happay.in
+    docs: Base URL for PRODUCTION
